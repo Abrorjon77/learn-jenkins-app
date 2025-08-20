@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Build App') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -11,20 +11,14 @@ pipeline {
             }
             steps {
                 sh '''
-                    node -v
+                    ls -la
+                    node --version
+                    npm --version
                     npm ci
                     npm run build
+                    ls -la
                 '''
-            }
-        }
 
-        stage('Build Docker Image') {
-            agent any
-            steps {
-                sh '''
-                    docker --version
-                    docker build -t my-app .
-                '''
             }
         }
     }

@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Node Build') {
             agent {
                 docker {
                     image 'node:18-slim'
@@ -11,14 +11,21 @@ pipeline {
             }
             steps {
                 sh '''
-                    ls -la
-                    node --version
-                    npm --version
+                    node -v
                     npm ci
                     npm run build
-                    ls -la
                 '''
+            }
+        }
 
+        stage('Docker Tasks') {
+            agent any // This runs directly on Jenkins host
+            steps {
+                sh '''
+                    docker --version
+                    docker inspect -f . node:18-slim
+                    docker build -t my-app .
+                '''
             }
         }
     }

@@ -2,28 +2,19 @@ pipeline {
     agent any
 
     stages {
-        stage('Build App with Node') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+        stage('Build') {
                 }
             }
             steps {
                 sh '''
+                    ls -la
                     node -v
+                    npm -v
                     npm ci
                     npm run build
+                    ls -la
                 '''
-            }
-        }
 
-        stage('Pull Docker Image') {
-            agent any  // <--- runs on Jenkins host
-            steps {
-                sh '''
-                    docker pull node:18-alpine
-                '''
             }
         }
     }

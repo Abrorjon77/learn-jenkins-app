@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Node Build') {
+        stage('Build App with Node') {
             agent {
                 docker {
                     image 'node:18-slim'
@@ -18,13 +18,11 @@ pipeline {
             }
         }
 
-        stage('Docker Tasks') {
-            agent any // This runs directly on Jenkins host
+        stage('Pull Docker Image') {
+            agent any  // <--- runs on Jenkins host
             steps {
                 sh '''
-                    docker --version
-                    docker inspect -f . node:18-slim
-                    docker build -t my-app .
+                    docker pull node:18-slim
                 '''
             }
         }
